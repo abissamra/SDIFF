@@ -36,7 +36,7 @@ TOA_reorganized = reorganizeTOA(TOA, PW, pwTolerance);
 
 TOA_copy = TOA;
 
-[priValues, toaValues] = cdiff_SimpleWeighted_SS(TOA_copy, fs, duration);
+[priValues, toaValues] = sdiff(TOA_copy, fs, duration);
 
 PDW = generateFinalPDW(PDW, priValues, toaValues);
 
@@ -45,7 +45,7 @@ disp('PDW');
 disp(PDW);
 
 % Specify the folder path
-folderPath = 'C:\Users\pedro\OneDrive\Documentos\GitHub\CDIFF_SS\Analises';
+folderPath = 'C:\Users\pedro\OneDrive\Documentos\GitHub\SDIF\Analises';
 
 savePDWToSpreadsheet(PDW,'Analise_RADAR_Aquisicao_', '.xlsx', folderPath);
 
