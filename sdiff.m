@@ -10,6 +10,10 @@ function [priValues, toaValues] = sdiff(TOA, fs, duration)
     x = 0.004; % Experimentally determined constant
     k = 1; % Experimentally determined constant
     
+    % Initialize output variables
+    priValues = []; % Vector to store PRI values
+    toaValues = {}; % Cell array to store TOA vectors for each PRI
+    
     diff_level = 1; % Start with difference level 1
     pulses_left = P; % Initialize remaining pulses
 
@@ -63,8 +67,12 @@ function [priValues, toaValues] = sdiff(TOA, fs, duration)
                 [potential_interval, is_subharmonic] = subharmonic_check(HIST, central_interval, threshold_hist, N);
                 
                 % Perform sequence search for the potential interval
-                [TOA, sequence_found] = sequence_simple(TOA, potential_interval, P, N, thresh5);
+                [TOA, sequence_found, pri, toa_sequence] = sequence_simple(TOA, potential_interval, P, N, thresh5);
                 if sequence_found
+                    % Store the PRI and TOA sequence
+                    priValues = [priValues; pri]; % Append PRI value
+                    toaValues{end+1} = toa_sequence; % Append TOA sequence
+                    
                     % Update P and pulses_left after removing the sequence
                     P = length(TOA);
                     diff_level = 1;
@@ -86,8 +94,12 @@ function [priValues, toaValues] = sdiff(TOA, fs, duration)
                 [potential_interval, is_subharmonic] = subharmonic_check(HIST, central_interval, threshold_hist, N);
                 
                 % Perform sequence search for the potential interval
-                [TOA, sequence_found] = sequence_simple(TOA, potential_interval, P, N, thresh5);
+                [TOA, sequence_found, pri, toa_sequence] = sequence_simple(TOA, potential_interval, P, N, thresh5);
                 if sequence_found
+                    % Store the PRI and TOA sequence
+                    priValues = [priValues; pri]; % Append PRI value
+                    toaValues{end+1} = toa_sequence; % Append TOA sequence
+                    
                     % Update P and pulses_left after removing the sequence
                     P = length(TOA);
                     diff_level = 1;

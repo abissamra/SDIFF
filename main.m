@@ -47,5 +47,5 @@ disp(PDW);
 % Specify the folder path
 folderPath = 'C:\Users\pedro\OneDrive\Documentos\GitHub\SDIF\Analises';
 
-savePDWToSpreadsheet(PDW,'Analise_RADAR_Aquisicao_', '.xlsx', folderPath);
+%savePDWToSpreadsheet(PDW,'Analise_RADAR_Aquisicao_', '.xlsx', folderPath);
 
