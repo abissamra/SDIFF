@@ -4,10 +4,10 @@ function [priValues, toaValues] = sdiff(TOA, fs, duration)
     N = length(t)-1; % Maximum interval to consider
     P = length(TOA); % Total number of pulses
     thresh5 = 0.0007; % Threshold for sequence detection
-    jitter_tolerance = 0.1; % Tolerance for grouping jittered PRIs (1% of PRI)
+    jitter_tolerance = 0.002; % Tolerance for grouping jittered PRIs
     
     % Constants for the new threshold function
-    x = 0.004; % Experimentally determined constant
+    x = 0.04; % Experimentally determined constant
     k = 1; % Experimentally determined constant
     
     % Initialize output variables
@@ -48,6 +48,7 @@ function [priValues, toaValues] = sdiff(TOA, fs, duration)
     
         % Group similar PRI values within jitter tolerance
         grouped_intervals = group_intervals(significant_intervals, jitter_tolerance);
+        central_intervals = cellfun(@median, grouped_intervals);
     
         % If no groups are formed (grouped_intervals is empty), increment diff_level and continue
         if isempty(grouped_intervals)
@@ -86,9 +87,10 @@ function [priValues, toaValues] = sdiff(TOA, fs, duration)
             end
         else
             % For diff_level > 1, perform sequence search for all significant values
-            for group = grouped_intervals
+            for i = 1: length(grouped_intervals)
+                group = grouped_intervals;
                 % Use the central value of the group as the potential jittered PRI
-                central_interval = median(group);
+                central_interval = median(group{i});
                 
                 % Perform subharmonic check
                 [potential_interval, is_subharmonic] = subharmonic_check(HIST, central_interval, threshold_hist, N);
@@ -136,7 +138,7 @@ function grouped_intervals = group_intervals(intervals, tolerance)
     
     % Group intervals within tolerance
     for i = 2:length(intervals)
-        if abs(intervals(i) - current_group(end)) <= tolerance * current_group(end)
+        if abs(intervals(i) - current_group(end)) <= tolerance %* current_group(end)
             % Add to current group if within tolerance
             current_group = [current_group, intervals(i)];
         else
@@ -148,7 +150,6 @@ function grouped_intervals = group_intervals(intervals, tolerance)
     
     % Add the last group
     grouped_intervals{end+1} = current_group;
-    grouped_intervals = cell2mat(grouped_intervals);
 end
 
 % ==================================================

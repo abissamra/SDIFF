@@ -36,7 +36,7 @@ TOA_reorganized = reorganizeTOA(TOA, PW, pwTolerance);
 
 TOA_copy = TOA;
 
-[priValues, toaValues] = sdiff(TOA_copy, fs, duration);
+[priValues, toaValues] = sdiff_2(TOA_copy, fs, duration);
 
 PDW = generateFinalPDW(PDW, priValues, toaValues);
 
